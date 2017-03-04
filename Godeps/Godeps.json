@@ -1,9 +1,15 @@
 {
+<<<<<<< HEAD
 	"ImportPath": "github.com/mat/besticon",
 	"GoVersion": "go1.7",
 	"GodepVersion": "v75",
+=======
+	"ImportPath": "github.com/erkie/besticon",
+	"GoVersion": "go1.6.2",
+	"GodepVersion": "v60",
+>>>>>>> Make it work on this fork
 	"Packages": [
-		"github.com/mat/besticon/..."
+		"github.com/erkie/besticon/..."
 	],
 	"Deps": [
 		{

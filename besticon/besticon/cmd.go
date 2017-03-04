@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/mat/besticon/besticon"
+	"github.com/erkie/besticon/besticon"
 )
 
 func main() {
@@ -22,7 +22,7 @@ func main() {
 
 	url := os.Args[len(os.Args)-1]
 
-	finder := besticon.IconFinder{}
+	finder := besticon.NewIconFinder()
 	icons, err := finder.FetchIcons(url)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s:  failed to fetch icons: %s\n", url, err)

@@ -22,11 +22,13 @@ import (
 	"image/color"
 
 	// Load supported image formats.
-	_ "github.com/mat/besticon/ico"
 	_ "image/gif"
 	_ "image/png"
 
-	"github.com/mat/besticon/colorfinder"
+	"github.com/erkie/besticon/colorfinder"
+
+	// ...even more image formats.
+	_ "github.com/erkie/besticon/ico"
 
 	"github.com/PuerkitoBio/goquery"
 	"golang.org/x/net/html/charset"
@@ -56,6 +58,13 @@ type IconFinder struct {
 	HostOnlyDomains []string
 	KeepImageBytes  bool
 	icons           []Icon
+	HTTPClient     *http.Client
+}
+
+// NewIconFinder should be used to setup the IconFinder instance
+func NewIconFinder() *IconFinder {
+	iconFinder := IconFinder{}
+	return &iconFinder
 }
 
 func (f *IconFinder) FetchIcons(url string) ([]Icon, error) {
@@ -165,6 +174,11 @@ func includesString(arr []string, str string) bool {
 }
 
 func fetchIcons(siteURL string) ([]Icon, error) {
+	siteURL = strings.TrimSpace(siteURL)
+	if !strings.HasPrefix(siteURL, "http:") && !strings.HasPrefix(siteURL, "https:") {
+		siteURL = "http://" + siteURL
+	}
+
 	html, url, e := fetchHTML(siteURL)
 	if e != nil {
 		return nil, e
@@ -415,7 +429,7 @@ func get(urlstring string) (*http.Response, error) {
 	setDefaultHeaders(req)
 
 	start := time.Now()
-	resp, err := client.Do(req)
+	resp, err := getOrInitHTTPClient().Do(req)
 	end := time.Now()
 	duration := end.Sub(start)
 
@@ -520,7 +534,6 @@ func sha1Sum(b []byte) string {
 	return fmt.Sprintf("%x", bs)
 }
 
-var client *http.Client
 var keepImageBytes bool
 
 func init() {
@@ -536,6 +549,7 @@ func setHTTPClient(c *http.Client) {
 	client = c
 }
 
+var HTTPClient *http.Client
 var logger *log.Logger
 
 // SetLogOutput sets the output for the package's logger.
@@ -545,7 +559,19 @@ func SetLogOutput(w io.Writer) {
 
 func init() {
 	SetLogOutput(os.Stdout)
+
+	// Needs to be kept in sync with those image/... imports
+	defaultFormats = []string{"png", "gif", "ico"}
+
 	keepImageBytes = true
 }
 
 var BuildDate string // set via ldflags on Make
+func getOrInitHTTPClient() *http.Client {
+	if HTTPClient == nil {
+		HTTPClient = &http.Client{Timeout: 30 * time.Second}
+		HTTPClient.Jar = mustInitCookieJar()
+		HTTPClient.CheckRedirect = checkRedirect
+	}
+	return HTTPClient
+}

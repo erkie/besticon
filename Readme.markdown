@@ -73,19 +73,19 @@ It is recommended to use your own copy of this service if you plan to rely on it
 
 ### Download binaries
 
-Binaries for some operating systems can be downloaded from <https://github.com/mat/besticon/releases/latest>
+Binaries for some operating systems can be downloaded from <https://github.com/erkie/besticon/releases/latest>
 
-Even more binaries are available from the excellent GoBuilder community site <https://gobuilder.me/github.com/mat/besticon/besticon/iconserver>
+Even more binaries are available from the excellent GoBuilder community site <https://gobuilder.me/github.com/erkie/besticon/besticon/iconserver>
 
 ### Build your own
 
 If you have Go 1.7 installed on your system you can use `go get` to fetch the source code and build the server:
 
-	$ go get -u github.com/mat/besticon/...
+	$ go get -u github.com/erkie/besticon/...
 
 If you want to build executables for a different target operating system you can add the `GOOS` and `GOARCH` environment variables:
 
-	$ GOOS=linux GOARCH=amd64 go get -u github.com/mat/besticon/...
+	$ GOOS=linux GOARCH=amd64 go get -u github.com/erkie/besticon/...
 
 ### Running
 
@@ -98,7 +98,7 @@ To use a different port use
 	$ PORT=80 iconserver
 
 Now when you open <http://localhost:8080/icons?url=instagram.com> you should see something like
-![Screenshot of The Favicon Finder](https://github.com/mat/besticon/raw/master/the-icon-finder.png)
+![Screenshot of The Favicon Finder](https://github.com/erkie/besticon/raw/master/the-icon-finder.png)
 
 
 ## Configuration

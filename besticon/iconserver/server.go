@@ -15,9 +15,9 @@ import (
 	"strings"
 
 	"github.com/NYTimes/gziphandler"
-	"github.com/mat/besticon/besticon"
-	"github.com/mat/besticon/besticon/iconserver/assets"
-	"github.com/mat/besticon/lettericon"
+	"github.com/erkie/besticon/besticon"
+	"github.com/erkie/besticon/besticon/iconserver/assets"
+	"github.com/erkie/besticon/lettericon"
 
 	// Enable runtime profiling at /debug/pprof
 	_ "net/http/pprof"
@@ -38,7 +38,7 @@ func iconsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	finder := newIconFinder()
+	finder := besticon.NewIconFinder()
 
 	formats := r.FormValue("formats")
 	if formats != "" {
@@ -71,7 +71,7 @@ func iconHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	finder := newIconFinder()
+	finder := besticon.NewIconFinder()
 	formats := r.FormValue("formats")
 	if formats != "" {
 		finder.FormatsAllowed = strings.Split(r.FormValue("formats"), ",")
@@ -136,7 +136,7 @@ func alliconsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	finder := newIconFinder()
+	finder := besticon.NewIconFinder()
 	formats := r.FormValue("formats")
 	if formats != "" {
 		finder.FormatsAllowed = strings.Split(r.FormValue("formats"), ",")
