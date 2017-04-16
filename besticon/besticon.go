@@ -546,7 +546,7 @@ func init() {
 func setHTTPClient(c *http.Client) {
 	c.Jar = mustInitCookieJar()
 	c.CheckRedirect = checkRedirect
-	client = c
+	HTTPClient = c
 }
 
 var HTTPClient *http.Client
