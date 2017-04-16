@@ -24,6 +24,7 @@ import (
 	// Load supported image formats.
 	_ "image/gif"
 	_ "image/png"
+	_ "image/jpeg"
 
 	"github.com/erkie/besticon/colorfinder"
 
