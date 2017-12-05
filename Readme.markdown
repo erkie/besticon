@@ -61,13 +61,13 @@ formats   | png,ico         | Comma-separated list of accepted image formats: pn
 
 I tried hard to make this useful but please note there are some known limitations:
 
-- Poor i18n support for letter icons ([#13](https://github.com/mat/besticon/issues/13))
+- Poor i18n support for letter icons ([#13](https://github.com/erkie/besticon/issues/13))
 
-Feel free to file other bugs - and offer your help - at <https://github.com/mat/besticon/issues>.
+Feel free to file other bugs - and offer your help - at <https://github.com/erkie/besticon/issues>.
 
 ## Self Hosting
 
-It is recommended to use your own copy of this service if you plan to rely on it in your project. An easy way to host your own copy is to use Heroku, just go to [https://heroku.com/deploy](https://heroku.com/deploy?template=https://github.com/mat/besticon) to get started.
+It is recommended to use your own copy of this service if you plan to rely on it in your project. An easy way to host your own copy is to use Heroku, just go to [https://heroku.com/deploy](https://heroku.com/deploy?template=https://github.com/erkie/besticon) to get started.
 
 ## Server Executable
 
