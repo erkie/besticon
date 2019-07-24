@@ -23,8 +23,8 @@ import (
 
 	// Load supported image formats.
 	_ "image/gif"
-	_ "image/png"
 	_ "image/jpeg"
+	_ "image/png"
 
 	"github.com/erkie/besticon/colorfinder"
 
@@ -59,7 +59,7 @@ type IconFinder struct {
 	HostOnlyDomains []string
 	KeepImageBytes  bool
 	icons           []Icon
-	HTTPClient     *http.Client
+	HTTPClient      *http.Client
 }
 
 // NewIconFinder should be used to setup the IconFinder instance
