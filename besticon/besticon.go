@@ -279,9 +279,14 @@ func determineBaseURL(siteURL *url.URL, doc *goquery.Document) *url.URL {
 		if e != nil {
 			return siteURL
 		}
+		if baseTagURL.Scheme == "" {
+			baseTagURL.Scheme = siteURL.Scheme
+		}
+		if baseTagURL.Host == "" {
+			baseTagURL.Host = siteURL.Host
+		}
 		return baseTagURL
 	}
-
 	return siteURL
 }
 
