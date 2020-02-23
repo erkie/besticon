@@ -27,6 +27,7 @@ import (
 	_ "image/png"
 
 	"github.com/erkie/besticon/colorfinder"
+	"github.com/vincent-petithory/dataurl"
 
 	// ...even more image formats.
 	_ "github.com/erkie/besticon/ico"
@@ -70,7 +71,7 @@ func NewIconFinder() *IconFinder {
 
 func (f *IconFinder) FetchIcons(url string) ([]Icon, error) {
 	url = strings.TrimSpace(url)
-	if !strings.HasPrefix(url, "http:") && !strings.HasPrefix(url, "https:") {
+	if !strings.HasPrefix(url, "http:") && !strings.HasPrefix(url, "https:") && !strings.HasPrefix(url, "data:") {
 		url = "http://" + url
 	}
 
@@ -416,6 +417,21 @@ func fetchIconDetails(url string) Icon {
 }
 
 func get(urlstring string) (*http.Response, error) {
+	if strings.HasPrefix(urlstring, "data:") {
+		b, err := dataurl.Decode(strings.NewReader(urlstring))
+		if err != nil {
+			return nil, err
+		}
+
+		return &http.Response{
+			Body:          ioutil.NopCloser(bytes.NewReader(b.Data)),
+			ContentLength: int64(len(b.Data)),
+			Header: http.Header{
+				"Content-type": []string{b.ContentType()},
+			},
+		}, nil
+	}
+
 	u, e := url.Parse(urlstring)
 	if e != nil {
 		return nil, e
@@ -500,6 +516,10 @@ func checkRedirect(req *http.Request, via []*http.Request) error {
 }
 
 func absoluteURL(baseURL *url.URL, path string) (string, error) {
+	if strings.HasPrefix(path, "data:") {
+		return path, nil
+	}
+
 	url, e := url.Parse(path)
 	if e != nil {
 		return "", e
@@ -517,6 +537,11 @@ func absoluteURL(baseURL *url.URL, path string) (string, error) {
 }
 
 func urlFromBase(baseURL *url.URL, path string) string {
+	if strings.HasPrefix(path, "data:") {
+		panic("F")
+		return path
+	}
+
 	url := *baseURL
 	url.Path = path
 	if url.Scheme == "" {
