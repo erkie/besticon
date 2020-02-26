@@ -18,7 +18,7 @@ type result struct {
 
 func resultFromCache(siteURL string) ([]Icon, error) {
 	if iconCache == nil {
-		return fetchIcons(siteURL)
+		return fetchIcons(siteURL, nil)
 	}
 
 	// Let results expire after a day
@@ -28,7 +28,7 @@ func resultFromCache(siteURL string) ([]Icon, error) {
 	err := iconCache.Get(siteURL, key, groupcache.AllocatingByteSliceSink(&data))
 	if err != nil {
 		logger.Println("ERR:", err)
-		return fetchIcons(siteURL)
+		return fetchIcons(siteURL, nil)
 	}
 
 	res := &result{}
@@ -45,7 +45,7 @@ func resultFromCache(siteURL string) ([]Icon, error) {
 
 func generatorFunc(ctx groupcache.Context, key string, sink groupcache.Sink) error {
 	siteURL := ctx.(string)
-	icons, err := fetchIcons(siteURL)
+	icons, err := fetchIcons(siteURL, nil)
 	if err != nil {
 		// Don't cache errors
 		return err

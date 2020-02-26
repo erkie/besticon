@@ -61,6 +61,7 @@ type IconFinder struct {
 	KeepImageBytes  bool
 	icons           []Icon
 	HTTPClient      *http.Client
+	OverrideDomain  func(string) []string
 }
 
 // NewIconFinder should be used to setup the IconFinder instance
@@ -82,7 +83,7 @@ func (f *IconFinder) FetchIcons(url string) ([]Icon, error) {
 	if CacheEnabled() {
 		f.icons, err = resultFromCache(url)
 	} else {
-		f.icons, err = fetchIcons(url)
+		f.icons, err = fetchIcons(url, f.OverrideDomain)
 	}
 
 	return f.Icons(), err
@@ -175,20 +176,23 @@ func includesString(arr []string, str string) bool {
 	return false
 }
 
-func fetchIcons(siteURL string) ([]Icon, error) {
+func fetchIcons(siteURL string, overrideFunc func(string) []string) ([]Icon, error) {
 	siteURL = strings.TrimSpace(siteURL)
 	if !strings.HasPrefix(siteURL, "http:") && !strings.HasPrefix(siteURL, "https:") {
 		siteURL = "http://" + siteURL
 	}
 
-	html, url, e := fetchHTML(siteURL)
-	if e != nil {
-		return nil, e
-	}
+	links := overrideFunc(siteURL)
+	if len(links) == 0 {
+		html, url, e := fetchHTML(siteURL)
+		if e != nil {
+			return nil, e
+		}
 
-	links, e := findIconLinks(url, html)
-	if e != nil {
-		return nil, e
+		links, e = findIconLinks(url, html)
+		if e != nil {
+			return nil, e
+		}
 	}
 
 	icons := fetchAllIcons(links)
