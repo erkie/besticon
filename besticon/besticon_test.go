@@ -113,7 +113,7 @@ func TestWithIconDataImages(t *testing.T) {
 
 func TestWithIconOverride(t *testing.T) {
 	override := IconFinder{}
-	override.OverrideDomain = func(inputUrl string) []string {
+	override.OverrideFinder = func(inputUrl string) []string {
 		if strings.Contains(inputUrl, "dpa.com") {
 			parsed, err := url.Parse(inputUrl)
 			if err != nil {
