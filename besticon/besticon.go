@@ -210,12 +210,19 @@ const maxResponseBodySize = 10485760 // 10MB
 
 func fetchHTML(url string) ([]byte, *url.URL, error) {
 	r, e := get(url)
-	if e != nil {
-		return nil, nil, e
-	}
 
-	if !(r.StatusCode >= 200 && r.StatusCode < 300) {
-		return nil, nil, errors.New("besticon: not found")
+	// If a server returns anything other than a successfull request
+	// and the request was http://, we try again using SSL, because some servers are misconfigured
+	// looking at you http://dk.hautecouture.dev/ which returns a 503 on http://
+	if e != nil || !(r.StatusCode >= 200 && r.StatusCode < 300) {
+		if strings.HasPrefix(url, "http://") {
+			url = strings.Replace(url, "http://", "https://", 1)
+			return fetchHTML(url)
+		}
+
+		if e != nil {
+			return nil, nil, e
+		}
 	}
 
 	b, e := getBodyBytes(r)
