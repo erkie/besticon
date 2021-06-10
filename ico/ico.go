@@ -12,6 +12,7 @@ import (
 
 	"image/png"
 
+	alternateBmp "github.com/hotei/bmp"
 	"golang.org/x/image/bmp"
 )
 
@@ -205,7 +206,15 @@ func parseBMP(entry *icondirEntry, icoBytes []byte) (image.Image, error) {
 	if err != nil {
 		return nil, err
 	}
-	return bmp.Decode(bmpBytes)
+	img, err := bmp.Decode(bmpBytes)
+	if err == nil {
+		return img, err
+	}
+	bmpBytes, err = makeFullBMPBytes(entry, icoBytes)
+	if err != nil {
+		return nil, err
+	}
+	return alternateBmp.Decode(bmpBytes)
 }
 
 func makeFullBMPBytes(entry *icondirEntry, icoBytes []byte) (*bytes.Buffer, error) {
@@ -233,7 +242,7 @@ func makeFullBMPBytes(entry *icondirEntry, icoBytes []byte) (*bytes.Buffer, erro
 
 	writeHeader := &bitmapHeaderWrite{
 		sigBM:           [2]byte{'B', 'M'},
-		fileSize:        14 + 40 + uint32(len(icoBytes)), // correct? important?
+		fileSize:        14 + 40 + entry.Size,
 		pixOffset:       pixOffset,
 		Size:            40,
 		Width:           uint32(h.Width),
