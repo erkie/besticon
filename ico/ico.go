@@ -12,7 +12,7 @@ import (
 
 	"image/png"
 
-	alternateBmp "github.com/hotei/bmp"
+	alternateBmp "github.com/feederco/bmp"
 	"golang.org/x/image/bmp"
 )
 
